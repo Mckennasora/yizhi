@@ -16,7 +16,6 @@ import com.yizhi.student.service.StudentInfoService;
 public class StudentInfoServiceImpl implements StudentInfoService {
 
 
-
 	@Autowired
 	private StudentInfoDao studentInfoDao;
 	

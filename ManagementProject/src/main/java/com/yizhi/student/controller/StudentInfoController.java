@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.yizhi.blog.domain.ContentDO;
 import com.yizhi.common.annotation.Log;
 import com.yizhi.common.controller.BaseController;
 import com.yizhi.common.utils.*;
@@ -33,19 +34,20 @@ import com.yizhi.student.service.StudentInfoService;
 @RequestMapping("/student/studentInfo")
 public class StudentInfoController {
 
-	
-
 
 	@Autowired
 	private StudentInfoService studentInfoService;
+
     //
 	@Log("学生信息保存")
 	@ResponseBody
 	@PostMapping("/save")
 	@RequiresPermissions("student:studentInfo:add")
 	public R save(StudentInfoDO studentInfoDO){
-	
-		return null;
+		if(studentInfoService.save(studentInfoDO)>0){
+			return R.ok();
+		}
+		return R.error();
 	}
 
 	/**
@@ -56,7 +58,11 @@ public class StudentInfoController {
 	@RequiresPermissions("student:studentInfo:studentInfo")
 	public PageUtils list(@RequestParam Map<String, Object> params){
 
-		return null;
+		Query query = new Query(params);
+		List<StudentInfoDO> bContentList = studentInfoService.list(query);
+		int total = studentInfoService.count(query);
+		PageUtils pageUtils = new PageUtils(bContentList, total);
+		return pageUtils;
 
 	}
 
@@ -70,7 +76,8 @@ public class StudentInfoController {
 	@RequiresPermissions("student:studentInfo:edit")
 	public R update(StudentInfoDO studentInfo){
 
-		return null;
+		studentInfoService.update(studentInfo);
+		return R.ok();
 	}
 
 	/**
@@ -81,7 +88,10 @@ public class StudentInfoController {
 	@ResponseBody
 	@RequiresPermissions("student:studentInfo:remove")
 	public R remove( Integer id){
-		return null;
+		if(studentInfoService.remove(id)>0){
+			return R.ok();
+		}
+		return R.error();
 	}
 	
 	/**
@@ -92,8 +102,8 @@ public class StudentInfoController {
 	@ResponseBody
 	@RequiresPermissions("student:studentInfo:batchRemove")
 	public R remove(@RequestParam("ids[]") Integer[] ids){
-
-		return null;
+		studentInfoService.batchRemove(ids);
+		return R.ok();
 	}
 
 
